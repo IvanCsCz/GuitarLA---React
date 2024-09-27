@@ -3,12 +3,14 @@ import Guitar from "./components/Guitar"
 import Header from "./components/Header"
 import { db } from "./data/db"
 
+const getIndexItem = (id, array) => array.findIndex(guitar => guitar.id === id)
+
 function App() {
   const [data, setData] = useState(db)
   const [cart, setCart] = useState([])
-
-  function addToCart(item){
-    const itemExists = cart.findIndex(guitar => guitar.id === item.id)
+  
+  const addToCart = (item) => {
+    const itemExists = getIndexItem(item.id, cart)
     
     if( itemExists >= 0){
       const updatedCart = [...cart]
@@ -19,10 +21,31 @@ function App() {
     }
 
   }
+  
+  const addOneItem = (id) =>  {
+    const indexItem = getIndexItem(id, cart)
+    const updatedCart = [...cart]
+    updatedCart[indexItem].quantity++
+    setCart(updatedCart)
+  }
+
+  const removeOneItem = (id) =>  {
+    const indexItem = getIndexItem(id, cart)
+    const updatedCart = [...cart]
+    updatedCart[indexItem].quantity--
+    setCart(updatedCart)
+  }
+
+  const removeFromCart = (id) => {
+    const updatedCart = cart.filter( (item) => item.id !== id)
+    setCart(updatedCart)
+  }
+
+  const resetCart = () => setCart([])
 
   return (
     <>
-      <Header />
+      <Header cart={cart} addOneItem={addOneItem} removeOneItem={removeOneItem} removeFromCart={removeFromCart} resetCart={resetCart}/>
       
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
