@@ -1,6 +1,4 @@
-function Guitar({name, description, price, image}){
-
-  
+function Guitar({name, description, price, image, id, addToCart}){
   
   return(
     <div className="col-md-6 col-lg-4 my-4 row align-items-center">
@@ -12,6 +10,7 @@ function Guitar({name, description, price, image}){
           <p>{description}</p>
           <p className="fw-black text-primary fs-3">${price}</p>
           <button 
+            onClick={() => addToCart({id, name, price, image})}
             type="button"
             className="btn btn-dark w-100"
           >Agregar al Carrito</button>
