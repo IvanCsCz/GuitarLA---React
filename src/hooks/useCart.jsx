@@ -1,42 +1,55 @@
 import { useState } from "react"
 import { db } from "../data/db"
-import { getIndexItem } from "../helpers/functions"
+
+const MAX_ITEMS = 5
+const MIN_ITEMS = 1
 
 function useCart() {
   const [data, setData] = useState(db)
   const [cart, setCart] = useState([])
   
   const addToCart = (item) => {
-    const itemExists = getIndexItem(item.id, cart)
+    const itemExists = cart.findIndex(guitar => guitar.id === item.id)
     
     if( itemExists >= 0){
-      const updatedCart = [...cart]
-      updatedCart[itemExists].quantity++
-      setCart(updatedCart)
+      
+      if(cart[itemExists].quantity < 5){
+        const updatedCart = [...cart]
+        updatedCart[itemExists].quantity++
+        setCart(updatedCart)
+      }
+
     } else {
       setCart(prevCart => [...prevCart, {...item, quantity: 1}])
     }
-
   }
   
-  const addOneItem = (id) =>  {
-    const indexItem = getIndexItem(id, cart)
-    const updatedCart = [...cart]
-    updatedCart[indexItem].quantity++
+  const increaseQuantity = (id) =>  {
+    const updatedCart = cart.map(item => {
+      if(id === item.id && item.quantity < MAX_ITEMS){
+        return {
+          ...item,
+          quantity: item.quantity + 1
+        }
+      }
+      return item
+    })
     setCart(updatedCart)
   }
 
-  const removeOneItem = (id) =>  {
-    const indexItem = getIndexItem(id, cart)
-    const updatedCart = [...cart]
-    const updatedQuantity = updatedCart[indexItem].quantity - 1
-
-    if(updatedQuantity > 0) {
-      updatedCart[indexItem].quantity--
-      setCart(updatedCart)
-    } else {
-      removeFromCart(id)
-    }
+  const decreaseQuantity = (id) =>  {
+    const updatedCart = cart.map(item => {
+      if(id === item.id && item.quantity > MIN_ITEMS){
+        
+          return {
+            ...item,
+            quantity: item.quantity - 1
+          }
+        
+      }
+      return item
+    })
+    setCart(updatedCart)
   }
 
   const removeFromCart = (id) => {
@@ -51,8 +64,8 @@ function useCart() {
     cart,
     setCart,
     addToCart,
-    addOneItem,
-    removeOneItem,
+    increaseQuantity,
+    decreaseQuantity,
     removeFromCart,
     resetCart
   }

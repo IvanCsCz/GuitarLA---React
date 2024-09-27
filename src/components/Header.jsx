@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import '../index.css'
 
-function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
+function Header ({cart, increaseQuantity, decreaseQuantity, removeFromCart, resetCart}){
   const isEmpty = useMemo( () => cart.length === 0, [cart] )
   const totalPrice = useMemo( () => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart])
 
@@ -48,7 +48,7 @@ function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
                                     </td>
                                     <td className="flex align-items-start gap-4">
                                         <button
-                                            onClick={() => removeOneItem(item.id)}
+                                            onClick={() => decreaseQuantity(item.id)}
                                             type="button"
                                             className="btn btn-dark"
                                         >
@@ -56,7 +56,7 @@ function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
                                         </button>
                                             {item.quantity}
                                         <button
-                                            onClick={() => addOneItem(item.id)}
+                                            onClick={() => increaseQuantity(item.id)}
                                             type="button"
                                             className="btn btn-dark"
                                         >

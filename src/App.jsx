@@ -3,11 +3,11 @@ import Header from "./components/Header"
 import useCart from "./hooks/useCart"
 
 function App() {
-  const {data, cart, addToCart, addOneItem, removeOneItem, removeFromCart, resetCart} = useCart()
+  const {data, cart, addToCart, increaseQuantity, decreaseQuantity, removeFromCart, resetCart} = useCart()
 
   return (
     <>
-      <Header cart={cart} addOneItem={addOneItem} removeOneItem={removeOneItem} removeFromCart={removeFromCart} resetCart={resetCart}/>
+      <Header cart={cart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} removeFromCart={removeFromCart} resetCart={resetCart}/>
       
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
