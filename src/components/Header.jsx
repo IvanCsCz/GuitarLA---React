@@ -1,28 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import '../index.css'
 
 function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
-  const [total, setTotal] = useState(0)
-
-  useEffect(() => {
-    if(cart.length === 0) {
-      setTotal(0)
-      return
-    }
-
-    if(cart.length === 1) {
-      setTotal(cart[0].price * cart[0].quantity)
-      return
-    }
-
-    const totalPrice = cart.reduce(
-      (accumulator, currentValue) => accumulator + (currentValue.quantity * currentValue.price),
-      0,
-    );
-
-    setTotal(totalPrice);
-
-  }, [cart])
+  const isEmpty = useMemo( () => cart.length === 0, [cart] )
+  const totalPrice = useMemo( () => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart])
 
   return(
     <header className="py-5 header">
@@ -40,7 +21,11 @@ function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
                       <img className="img-fluid" src="./public/img/carrito.png" alt="imagen carrito" />
 
                       <div id="carrito" className="bg-white p-3">
+                        {isEmpty ? 
                           <p className="text-center">El carrito esta vacio</p>
+                          :
+                        
+                          <>
                           <table className="w-100 table">
                               <thead>
                                   <tr>
@@ -91,10 +76,13 @@ function Header ({cart, addOneItem, removeOneItem, removeFromCart, resetCart}){
                                 ))}
                                   
                               </tbody>
-                          </table>
+                            </table>
+                            
 
-                          <p className="text-end">Total pagar: <span className="fw-bold">${total}</span></p>
-                          <button onClick={resetCart} className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+                            <p className="text-end">Total pagar: <span className="fw-bold">${totalPrice}</span></p>
+                            <button onClick={resetCart} className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+                          </>
+                        }
                       </div>
                   </div>
               </nav>
